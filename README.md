@@ -1,70 +1,103 @@
-# Getting Started with Create React App
+# ETF Dividend Portfolio Tracker
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A comprehensive React application to track and visualize ETF dividend investments with DRIP (Dividend Reinvestment Plan) functionality. This app allows you to monitor your portfolio, track monthly dividends, and project future growth based on different scenarios.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **Portfolio Dashboard**: View summary of all holdings, current value, and growth metrics
+- **DRIP Functionality**: Automatically track dividend reinvestments and share accumulation
+- **Dividend History**: Track all dividend payments with detailed data visualizations
+- **Scenario Analysis**: Project future growth with bullish, neutral, and bearish scenarios
+- **Data Persistence**: All data is stored in your browser's local storage
+- **Responsive Design**: Works on desktop and mobile devices
 
-### `npm start`
+## Deployment to Vercel
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+This application is configured for easy deployment on Vercel. Follow these steps:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1. **Fork or Clone the Repository**
 
-### `npm test`
+   ```
+   git clone https://github.com/yourusername/etf-dividend-tracker.git
+   cd etf-dividend-tracker
+   ```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. **Install Dependencies**
 
-### `npm run build`
+   ```
+   npm install
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+3. **Run Locally (Optional)**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+   ```
+   npm start
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+4. **Deploy to Vercel**
 
-### `npm run eject`
+   - Install Vercel CLI:
+     ```
+     npm install -g vercel
+     ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+   - Login to Vercel:
+     ```
+     vercel login
+     ```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+   - Deploy:
+     ```
+     vercel
+     ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+   - For production deployment:
+     ```
+     vercel --prod
+     ```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+   Alternatively, you can connect your GitHub repository directly to Vercel for automatic deployments.
 
-## Learn More
+## Project Structure
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- `src/App.js` - Main application component and routing
+- `src/contexts/PortfolioContext.js` - State management for the entire application
+- `src/components/` - All UI components:
+  - `Dashboard.js` - Main dashboard with portfolio overview
+  - `DividendHistory.js` - Track and visualize all dividend payments
+  - `ScenarioAnalysis.js` - Project future growth with different scenarios
+  - `AddHolding.js` - Form to add new ETF holdings
+  - `AddDividend.js` - Form to record new dividend payments
+  - `PortfolioSettings.js` - Configure scenario parameters and manage holdings
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Usage Guide
 
-### Code Splitting
+1. **Getting Started**
+   - Add your first ETF holding using the "Add New Holding" button
+   - Enter the ticker, name, initial investment, share price, and shares
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+2. **Recording Dividends**
+   - When you receive a dividend, click "Record New Dividend"
+   - Enter the dividend details including whether it was reinvested
+   - The app will automatically update your share count if DRIP is enabled
 
-### Analyzing the Bundle Size
+3. **Analyzing Growth**
+   - Use the Scenario Analysis page to project future growth
+   - Customize the bullish, neutral, and bearish scenarios in Settings
+   - Update current share prices periodically to keep data accurate
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+4. **Monthly Updates**
+   - After receiving monthly dividends, update your portfolio
+   - The charts and projections will automatically update
 
-### Making a Progressive Web App
+## Technologies Used
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- React
+- React Router
+- Recharts for data visualization
+- TailwindCSS for styling
+- Local Storage for data persistence
 
-### Advanced Configuration
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+MIT License
