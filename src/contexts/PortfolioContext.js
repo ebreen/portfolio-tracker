@@ -1,5 +1,6 @@
 // contexts/PortfolioContext.js
 import React, { createContext, useState, useEffect } from 'react';
+import DataService from '../utils/DataService';
 
 // Initial sample data
 const initialHoldings = [
@@ -11,7 +12,7 @@ const initialHoldings = [
     initialSharePrice: 21,
     currentSharePrice: 21,
     shares: 1428.57,
-    totalDividends: 0,
+    purchaseDate: "2025-01-01",
     color: '#8884d8'
   }
 ];
@@ -66,40 +67,45 @@ export const PortfolioContext = createContext();
 export const PortfolioProvider = ({ children }) => {
   // Initialize state with local storage if available or use defaults
   const [holdings, setHoldings] = useState(() => {
-    const savedHoldings = localStorage.getItem('holdings');
-    return savedHoldings ? JSON.parse(savedHoldings) : initialHoldings;
+    return DataService.loadData(DataService.STORAGE_KEYS.HOLDINGS, initialHoldings);
   });
   
   const [dividends, setDividends] = useState(() => {
-    const savedDividends = localStorage.getItem('dividends');
-    return savedDividends ? JSON.parse(savedDividends) : initialDividends;
+    return DataService.loadData(DataService.STORAGE_KEYS.DIVIDENDS, initialDividends);
   });
   
   const [scenarios, setScenarios] = useState(() => {
-    const savedScenarios = localStorage.getItem('scenarios');
-    return savedScenarios ? JSON.parse(savedScenarios) : initialScenarios;
+    return DataService.loadData(DataService.STORAGE_KEYS.SCENARIOS, initialScenarios);
   });
   
   const [currentScenario, setCurrentScenario] = useState(() => {
-    const savedScenario = localStorage.getItem('currentScenario');
-    return savedScenario || 'neutral';
+    return DataService.loadData(DataService.STORAGE_KEYS.CURRENT_SCENARIO, 'neutral');
+  });
+  
+  // State for tracking import/export status
+  const [dataManagementState, setDataManagementState] = useState({
+    isImporting: false,
+    isExporting: false,
+    lastBackupDate: DataService.getLastBackupDate(),
+    message: null,
+    messageType: null // 'success' or 'error'
   });
 
   // Save to local storage whenever state changes
   useEffect(() => {
-    localStorage.setItem('holdings', JSON.stringify(holdings));
+    DataService.saveData(DataService.STORAGE_KEYS.HOLDINGS, holdings);
   }, [holdings]);
   
   useEffect(() => {
-    localStorage.setItem('dividends', JSON.stringify(dividends));
+    DataService.saveData(DataService.STORAGE_KEYS.DIVIDENDS, dividends);
   }, [dividends]);
   
   useEffect(() => {
-    localStorage.setItem('scenarios', JSON.stringify(scenarios));
+    DataService.saveData(DataService.STORAGE_KEYS.SCENARIOS, scenarios);
   }, [scenarios]);
   
   useEffect(() => {
-    localStorage.setItem('currentScenario', currentScenario);
+    DataService.saveData(DataService.STORAGE_KEYS.CURRENT_SCENARIO, currentScenario);
   }, [currentScenario]);
 
   // Calculate portfolio summary data
@@ -284,12 +290,89 @@ export const PortfolioProvider = ({ children }) => {
     return projectionData;
   };
 
+  // Export portfolio data
+  const exportData = () => {
+    setDataManagementState({
+      ...dataManagementState,
+      isExporting: true,
+      message: null
+    });
+    
+    try {
+      DataService.exportPortfolioData();
+      
+      setDataManagementState({
+        isExporting: false,
+        isImporting: false,
+        lastBackupDate: DataService.getLastBackupDate(),
+        message: 'Portfolio data exported successfully',
+        messageType: 'success'
+      });
+    } catch (error) {
+      console.error('Export error:', error);
+      
+      setDataManagementState({
+        ...dataManagementState,
+        isExporting: false,
+        message: 'Failed to export portfolio data',
+        messageType: 'error'
+      });
+    }
+  };
+
+  // Import portfolio data
+  const importData = async (file) => {
+    setDataManagementState({
+      ...dataManagementState,
+      isImporting: true,
+      message: null
+    });
+    
+    try {
+      const result = await DataService.importPortfolioData(file);
+      
+      if (result.success) {
+        // Reload the data from localStorage
+        setHoldings(DataService.loadData(DataService.STORAGE_KEYS.HOLDINGS, initialHoldings));
+        setDividends(DataService.loadData(DataService.STORAGE_KEYS.DIVIDENDS, initialDividends));
+        setScenarios(DataService.loadData(DataService.STORAGE_KEYS.SCENARIOS, initialScenarios));
+        setCurrentScenario(DataService.loadData(DataService.STORAGE_KEYS.CURRENT_SCENARIO, 'neutral'));
+        
+        setDataManagementState({
+          isImporting: false,
+          isExporting: false,
+          lastBackupDate: DataService.getLastBackupDate(),
+          message: `Imported ${result.data.holdings} holdings and ${result.data.dividends} dividends successfully`,
+          messageType: 'success'
+        });
+      }
+    } catch (error) {
+      console.error('Import error:', error);
+      
+      setDataManagementState({
+        ...dataManagementState,
+        isImporting: false,
+        message: error.message || 'Failed to import portfolio data',
+        messageType: 'error'
+      });
+    }
+  };
+
+  // Clear notification message
+  const clearDataManagementMessage = () => {
+    setDataManagementState({
+      ...dataManagementState,
+      message: null
+    });
+  };
+
   // Create a value object with all our state and functions
   const value = {
     holdings,
     dividends,
     scenarios,
     currentScenario,
+    dataManagementState,
     setCurrentScenario,
     getPortfolioSummary,
     getUpcomingDividends,
@@ -298,7 +381,10 @@ export const PortfolioProvider = ({ children }) => {
     deleteHolding,
     addDividend,
     updateScenarios,
-    generateProjection
+    generateProjection,
+    exportData,
+    importData,
+    clearDataManagementMessage
   };
 
   return (

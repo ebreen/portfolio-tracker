@@ -8,8 +8,37 @@ A comprehensive React application to track and visualize ETF dividend investment
 - **DRIP Functionality**: Automatically track dividend reinvestments and share accumulation
 - **Dividend History**: Track all dividend payments with detailed data visualizations
 - **Scenario Analysis**: Project future growth with bullish, neutral, and bearish scenarios
-- **Data Persistence**: All data is stored in your browser's local storage
+- **Enhanced Data Management**:
+  - Local storage persistence with standardized data structure
+  - Export/import functionality for data portability between devices
+  - Data backup and restoration capabilities
+  - Automatic data migration during app updates
 - **Responsive Design**: Works on desktop and mobile devices
+
+## Data Management Capabilities
+
+The application features a robust data management system designed for reliability and portability:
+
+### Data Storage
+- All portfolio data is securely stored in your browser's local storage
+- Automatic data persistence without requiring server authentication
+- Data segregation with structured storage keys
+
+### Data Portability
+- **Export Functionality**: Download your complete portfolio data as a JSON file
+- **Import Functionality**: Restore your portfolio from previously exported files
+- **Drag-and-Drop Support**: Easily import data by dragging files into the interface
+
+### Data Safety
+- Pre-migration backups before data structure changes
+- Validation checks to prevent importing corrupted data
+- Error handling for local storage limitations
+- Automatic data migration during application updates
+
+### Version Control
+- Transparent versioning displayed in application footer
+- Automatic schema migrations between versions
+- Data integrity preservation during updates
 
 ## Deployment to Vercel
 
@@ -18,7 +47,7 @@ This application is configured for easy deployment on Vercel. Follow these steps
 1. **Fork or Clone the Repository**
 
    ```
-   git clone https://github.com/yourusername/etf-dividend-tracker.git
+   git clone https://github.com/ebreen/portfolio-tracker
    cd etf-dividend-tracker
    ```
 
@@ -62,6 +91,9 @@ This application is configured for easy deployment on Vercel. Follow these steps
 
 - `src/App.js` - Main application component and routing
 - `src/contexts/PortfolioContext.js` - State management for the entire application
+- `src/utils/` - Utility functions and services:
+  - `DataService.js` - Core data persistence and import/export functionality
+  - `DataMigration.js` - Version tracking and data migration utilities
 - `src/components/` - All UI components:
   - `Dashboard.js` - Main dashboard with portfolio overview
   - `DividendHistory.js` - Track and visualize all dividend payments
@@ -69,6 +101,8 @@ This application is configured for easy deployment on Vercel. Follow these steps
   - `AddHolding.js` - Form to add new ETF holdings
   - `AddDividend.js` - Form to record new dividend payments
   - `PortfolioSettings.js` - Configure scenario parameters and manage holdings
+  - `DataManagement.js` - Interface for data import/export operations
+  - `Notification.js` - Reusable component for user feedback
 
 ## Usage Guide
 
@@ -86,9 +120,30 @@ This application is configured for easy deployment on Vercel. Follow these steps
    - Customize the bullish, neutral, and bearish scenarios in Settings
    - Update current share prices periodically to keep data accurate
 
-4. **Monthly Updates**
+4. **Managing Your Data**
+   - Navigate to Settings → Data Management to export or import data
+   - Create regular backups by exporting your portfolio data
+   - Transfer your portfolio between devices by exporting and importing
+   - Drag and drop exported files to import them
+
+5. **Monthly Updates**
    - After receiving monthly dividends, update your portfolio
    - The charts and projections will automatically update
+
+## Data Persistence Model
+
+The application implements a structured data persistence model:
+
+```
+Local Storage
+├── drip_holdings         # Portfolio holdings data
+├── drip_dividends        # Dividend history records
+├── drip_scenarios        # Scenario configuration settings
+├── drip_current_scenario # Currently selected scenario
+├── drip_last_backup      # Timestamp of last data export
+├── drip_app_version      # Application version for migrations
+└── drip_pre_migration_backup # Safety backup before migrations
+```
 
 ## Technologies Used
 
@@ -97,6 +152,7 @@ This application is configured for easy deployment on Vercel. Follow these steps
 - Recharts for data visualization
 - TailwindCSS for styling
 - Local Storage for data persistence
+- File System API for import/export functionality
 
 ## License
 

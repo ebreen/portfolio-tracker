@@ -2,6 +2,7 @@
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PortfolioContext } from '../contexts/PortfolioContext';
+import DataManagement from './DataManagement';
 
 const PortfolioSettings = () => {
   const { scenarios, updateScenarios, holdings, updateHolding, deleteHolding } = useContext(PortfolioContext);
@@ -72,6 +73,9 @@ const PortfolioSettings = () => {
   return (
     <div className="space-y-8">
       <h1 className="text-2xl font-bold">Portfolio Settings</h1>
+      
+      {/* Data Management Section */}
+      <DataManagement />
       
       {/* Scenario Settings */}
       <div className="bg-white p-6 rounded-lg border border-gray-200 shadow">
@@ -345,7 +349,7 @@ const PortfolioSettings = () => {
       
       {/* Edit Holding Modal */}
       {editingHolding && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
             <h3 className="text-lg font-semibold mb-4">Edit Holding</h3>
             
